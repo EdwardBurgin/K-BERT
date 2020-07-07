@@ -21,7 +21,7 @@ from uer.subencoders.cnn_subencoder import CnnSubencoder
 from uer.models.model import Model
 
 
-def build_model(args):
+def build_model(args, vocab):
     """
     Build universial encoder representations models.
     The combinations of different embedding, encoder, 
@@ -34,10 +34,11 @@ def build_model(args):
         subencoder = globals()[args.subencoder.capitalize() + "Subencoder"](args, len(args.sub_vocab))
     else:
         subencoder = None
+        print('no sub-encoder', len(vocab))
 
-    embedding = BertEmbedding(args, len(args.vocab))
+    embedding = BertEmbedding(args, len(vocab))
     encoder = globals()[args.encoder.capitalize() + "Encoder"](args)
-    target = globals()[args.target.capitalize() + "Target"](args, len(args.vocab))
+    target = globals()[args.target.capitalize() + "Target"](args, len(vocab))
     model = Model(args, embedding, encoder, target, subencoder)
 
     return model
